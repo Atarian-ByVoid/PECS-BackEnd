@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreatePacienteDTO } from './dto/paciente.dto';
+import { CreatePacienteDTO, UpdatePacienteDTO, } from './dto/paciente.dto';
 
 
 @Injectable()
@@ -45,11 +45,94 @@ export class PacienteService {
       },
     };
 
-    const paciente = await this.prismaService.paciente.create({
+    await this.prismaService.paciente.create({
       data: createData,
     });
 
     return data;
+  }
+
+  async findAll(page: number, pageSize: number) {
+    const skip = (page - 1) * pageSize;
+
+    const [data, total] = await Promise.all([
+      this.prismaService.paciente.findMany({
+        skip,
+        take: pageSize,
+      }),
+      this.prismaService.paciente.count(),
+    ]);
+
+    return {
+      statusCode: 200,
+      data,
+      page,
+      pageSize,
+      totalItems: total,
+    };
+  }
+
+  async findOne(id: string) {
+    const dataTask = await this.prismaService.paciente.findFirst({
+      where: {
+        id,
+      },
+    });
+    return {
+      statusCode: 200,
+      data: dataTask,
+    };
+  }
+  async deletePaciente(id: string): Promise<void> {
+    await this.prismaService.paciente.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async updatePaciente(id: string, updateData: UpdatePacienteDTO) {
+    const { nome, documento, diagnostico } = updateData;
+
+    const existingPaciente = await this.prismaService.paciente.findUnique({
+      where: { id },
+    });
+
+    if (!existingPaciente) {
+      throw new NotFoundException('Paciente não encontrado');
+    }
+
+    const updatedPaciente = await this.prismaService.paciente.update({
+      where: { id },
+      data: {
+        nome,
+        documento,
+      },
+    });
+
+    if (diagnostico) {
+      await this.prismaService.diagnostico.deleteMany({
+        where: { pacienteId: id },
+      });
+
+      const diagnosticoCreateData = diagnostico.map((dto) => {
+        const { dataDiagnostico, tratamento, subtipoTEA, gravidadeTEA } = dto;
+
+        return {
+          dataDiagnostico,
+          tratamento,
+          subtipoTEA,
+          gravidadeTEA,
+          pacienteId: id,
+        };
+      });
+
+      await this.prismaService.diagnostico.createMany({
+        data: diagnosticoCreateData,
+      });
+    }
+
+    return updateData;
   }
 
 

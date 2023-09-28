@@ -40,3 +40,5 @@ export class CreatePacienteDTO extends OmitType(PacienteDTO, ['usuarios', 'diagn
   @IsOptional()
   diagnostico?: CreateDiagnosticoDTO[];
 }
+
+export class UpdatePacienteDTO extends OmitType(CreatePacienteDTO, ['id']) { }
