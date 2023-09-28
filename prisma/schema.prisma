@@ -51,11 +51,11 @@ model Usuario {
   gender         Gender    @default(FEMALE)
   role           Role      @default(USER)
   paciente       Paciente? @relation(fields: [pacienteId], references: [id])
-  pacienteId     Int?
+  pacienteId     String?
 }
 
 model Paciente {
-  id             Int           @id @default(autoincrement())
+  id             String        @id @default(uuid())
   criadoEm       DateTime      @default(now())
   atualizadoEm   DateTime      @updatedAt
   deletadoEm     DateTime?
@@ -64,13 +64,13 @@ model Paciente {
   documento      String        @unique
   diagnostico    Diagnostico[]
 
-  usuarioId Int?
+  usuarioId String?
 
   Usuario Usuario[]
 }
 
 model Diagnostico {
-  id              Int          @id @default(autoincrement())
+  id              String       @id @default(uuid())
   criadoEm        DateTime     @default(now())
   atualizadoEm    DateTime     @updatedAt
   deletadoEm      DateTime?
@@ -80,5 +80,5 @@ model Diagnostico {
   gravidadeTEA    GravidadeTEA
 
   Paciente   Paciente? @relation(fields: [pacienteId], references: [id])
-  pacienteId Int?
+  pacienteId String?
 }

@@ -1,13 +1,17 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, OmitType } from "@nestjs/swagger";
 import { GravidadeTEA, SubtipoTEA } from "@prisma/client";
-import { IsDateString, IsEnum, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsOptional, IsString } from "class-validator";
 
 export class DiagnosticoDTO {
 
   @ApiProperty({ required: false })
-  @IsDateString()
+  @IsString()
   @IsOptional()
-  dataDiagnostico?: string;
+  id?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  dataDiagnostico?: Date;
 
   @ApiProperty({ required: false })
   @IsString()
@@ -24,3 +28,5 @@ export class DiagnosticoDTO {
 
 
 }
+
+export class CreateDiagnosticoDTO extends OmitType(DiagnosticoDTO, ['id']) { }

@@ -1,19 +1,18 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsDateString, IsInt, IsOptional, IsString } from "class-validator";
-import { DiagnosticoDTO } from "src/diagnostico/dto/diagnostico.dto";
+import { ApiProperty, ApiPropertyOptional, OmitType } from "@nestjs/swagger";
+import { IsArray, IsOptional, IsString } from "class-validator";
+import { CreateDiagnosticoDTO, DiagnosticoDTO } from "src/diagnostico/dto/diagnostico.dto";
 import { UsuarioDTO } from "src/usuario/usuario.dto";
 
 export class PacienteDTO {
 
-  @ApiProperty({ required: false })
-  @IsInt()
+  @ApiPropertyOptional({ required: false })
+  @IsString()
   @IsOptional()
-  id?: number;
+  id?: string;
 
   @ApiProperty({ required: false })
-  @IsDateString()
   @IsOptional()
-  dataNascimento?: string | null;
+  dataNascimento?: Date;
 
   @ApiProperty()
   @IsString()
@@ -32,4 +31,12 @@ export class PacienteDTO {
   @IsArray()
   @IsOptional()
   usuarios?: UsuarioDTO[];
+}
+
+export class CreatePacienteDTO extends OmitType(PacienteDTO, ['usuarios', 'diagnostico']) {
+
+  @ApiProperty({ type: () => [CreateDiagnosticoDTO], required: false })
+  @IsArray()
+  @IsOptional()
+  diagnostico?: CreateDiagnosticoDTO[];
 }
