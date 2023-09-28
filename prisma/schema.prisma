@@ -1,0 +1,84 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Gender {
+  FEMALE
+  MALE
+}
+
+enum GravidadeTEA {
+  LEVE
+  MODERADA
+  GRAVE
+}
+
+enum SubtipoTEA {
+  AUTISMO_CLASSICO
+  SINDROME_ASPERGER
+  TRANSTORNO_DESINTEGRATIVO_DA_INFANCIA
+  TRANSTORNO_DESENVOLVIMENTO_NAO_ESPECIFICADO
+}
+
+model Usuario {
+  id             String    @id @default(uuid())
+  criadoEm       DateTime  @default(now())
+  atualizadoEm   DateTime  @updatedAt
+  deletadoEm     DateTime?
+  email          String    @unique
+  senha          String
+  nome           String
+  telefone       String
+  cpf            String    @unique
+  rg             String    @unique
+  dataNascimento DateTime? @db.Date
+  logradouro     String
+  cidade         String
+  bairro         String
+  uf             String
+  username       String    @unique
+  imagemUrl      String?
+  gender         Gender    @default(FEMALE)
+  role           Role      @default(USER)
+  paciente       Paciente? @relation(fields: [pacienteId], references: [id])
+  pacienteId     Int?
+}
+
+model Paciente {
+  id             Int           @id @default(autoincrement())
+  criadoEm       DateTime      @default(now())
+  atualizadoEm   DateTime      @updatedAt
+  deletadoEm     DateTime?
+  dataNascimento DateTime?     @db.Date
+  nome           String
+  documento      String        @unique
+  diagnostico    Diagnostico[]
+
+  usuarioId Int?
+
+  Usuario Usuario[]
+}
+
+model Diagnostico {
+  id              Int          @id @default(autoincrement())
+  criadoEm        DateTime     @default(now())
+  atualizadoEm    DateTime     @updatedAt
+  deletadoEm      DateTime?
+  dataDiagnostico DateTime
+  tratamento      String?
+  subtipoTEA      SubtipoTEA
+  gravidadeTEA    GravidadeTEA
+
+  Paciente   Paciente? @relation(fields: [pacienteId], references: [id])
+  pacienteId Int?
+}

@@ -1,0 +1,5 @@
+{
+  "docker.dockerPath": "/usr/local/bin/docker",
+  "editor.formatOnSave": true,
+  "editor.formatOnType": false
+}
