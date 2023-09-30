@@ -8,7 +8,7 @@ export class PacienteDTO {
   @ApiPropertyOptional({ required: false })
   @IsString()
   @IsOptional()
-  id?: string;
+  idUsuario?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -41,4 +41,7 @@ export class CreatePacienteDTO extends OmitType(PacienteDTO, ['usuarios', 'diagn
   diagnostico?: CreateDiagnosticoDTO[];
 }
 
-export class UpdatePacienteDTO extends OmitType(CreatePacienteDTO, ['id']) { }
+export class UpdatePacienteDTO extends OmitType(CreatePacienteDTO, ['idUsuario']) {
+
+
+}

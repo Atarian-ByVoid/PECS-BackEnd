@@ -1,4 +1,4 @@
-import { ApiProperty, OmitType } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { GravidadeTEA, SubtipoTEA } from "@prisma/client";
 import { IsEnum, IsOptional, IsString } from "class-validator";
 
@@ -7,7 +7,7 @@ export class DiagnosticoDTO {
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
-  id?: string;
+  idDiagnostico?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -29,4 +29,10 @@ export class DiagnosticoDTO {
 
 }
 
-export class CreateDiagnosticoDTO extends OmitType(DiagnosticoDTO, ['id']) { }
+export class CreateDiagnosticoDTO extends DiagnosticoDTO {
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  idDiagnostico?: string;
+}

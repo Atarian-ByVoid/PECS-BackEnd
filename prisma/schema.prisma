@@ -50,8 +50,10 @@ model Usuario {
   imagemUrl      String?
   gender         Gender    @default(FEMALE)
   role           Role      @default(USER)
-  paciente       Paciente? @relation(fields: [pacienteId], references: [id])
+  Paciente       Paciente? @relation(fields: [pacienteId], references: [id])
   pacienteId     String?
+
+  @@map("usuario")
 }
 
 model Paciente {
@@ -64,9 +66,9 @@ model Paciente {
   documento      String        @unique
   diagnostico    Diagnostico[]
 
-  usuarioId String?
-
   Usuario Usuario[]
+
+  @@map("paciente")
 }
 
 model Diagnostico {
@@ -81,4 +83,6 @@ model Diagnostico {
 
   Paciente   Paciente? @relation(fields: [pacienteId], references: [id])
   pacienteId String?
+
+  @@map("diagnostico")
 }

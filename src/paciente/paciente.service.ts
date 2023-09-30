@@ -1,56 +1,104 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreatePacienteDTO, UpdatePacienteDTO, } from './dto/paciente.dto';
+import { CreatePacienteDTO, UpdatePacienteDTO } from './dto/paciente.dto';
 
 
 @Injectable()
 export class PacienteService {
   constructor(private prismaService: PrismaService) { }
 
+
   async createPaciente(data: CreatePacienteDTO) {
-    const { dataNascimento, nome, documento, id, diagnostico } = data;
+    const { nome, documento, idUsuario, diagnostico } = data;
 
-    const user = await this.prismaService.usuario.findUnique({
-      where: { id: id },
+    const paciente = await this.prismaService.paciente.create({
+      data: {
+        nome,
+        documento,
+        Usuario: {
+          connect: { id: idUsuario },
+        },
+      },
+      select: {
+        id: true,
+      },
     });
 
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
+    if (!paciente || !paciente.id) {
+      throw new Error('Erro ao criar o paciente');
     }
-    const isoDate = new Date(dataNascimento).toISOString();
 
-    const createData = {
-      nome,
-      dataNascimento: isoDate,
-      documento,
-      Usuario: {
-        connect: { id: id },
-      },
-      diagnostico: {
-        create: diagnostico.map((dto) => {
-          const { dataDiagnostico, tratamento, subtipoTEA, gravidadeTEA } = dto;
+    const diagnosticoCreateData = diagnostico.map((dto) => {
+      const { dataDiagnostico, tratamento, subtipoTEA, gravidadeTEA } = dto;
 
-          if (!dataDiagnostico || !subtipoTEA || !gravidadeTEA) {
-            throw new BadRequestException('Dados de diagnóstico incompletos');
-          }
-          const isoDate = new Date(dataDiagnostico).toISOString();
+      if (!dataDiagnostico || !subtipoTEA || !gravidadeTEA) {
+        throw new BadRequestException('Dados de diagnóstico incompletos');
+      }
 
-          return {
-            dataDiagnostico: isoDate,
-            tratamento,
-            subtipoTEA,
-            gravidadeTEA,
-          };
-        }),
-      },
-    };
+      return {
+        dataDiagnostico: new Date(dataDiagnostico).toISOString(),
+        tratamento,
+        subtipoTEA,
+        gravidadeTEA,
+        pacienteId: paciente.id,
 
-    await this.prismaService.paciente.create({
-      data: createData,
+      };
     });
 
-    return data;
+    await this.prismaService.diagnostico.createMany({
+      data: diagnosticoCreateData,
+    });
+
+    return {
+      id: paciente.id,
+      ...data,
+    };
   }
+
+  // async createPaciente(data: CreatePacienteDTO) {
+  //   const { dataNascimento, nome, documento, idUsuario, diagnostico } = data;
+
+  //   const user = await this.prismaService.usuario.findUnique({
+  //     where: { id: idUsuario },
+  //   });
+
+  //   if (!user) {
+  //     throw new NotFoundException('Usuário não encontrado');
+  //   }
+  //   const isoDate = new Date(dataNascimento).toISOString();
+
+  //   const createData = {
+  //     nome,
+  //     dataNascimento: isoDate,
+  //     documento,
+  //     Usuario: {
+  //       connect: { id: idUsuario },
+  //     },
+  //     diagnostico: {
+  //       create: diagnostico.map((dto) => {
+  //         const { dataDiagnostico, tratamento, subtipoTEA, gravidadeTEA } = dto;
+
+  //         if (!dataDiagnostico || !subtipoTEA || !gravidadeTEA) {
+  //           throw new BadRequestException('Dados de diagnóstico incompletos');
+  //         }
+  //         const isoDate = new Date(dataDiagnostico).toISOString();
+
+  //         return {
+  //           dataDiagnostico: isoDate,
+  //           tratamento,
+  //           subtipoTEA,
+  //           gravidadeTEA,
+  //         };
+  //       }),
+  //     },
+  //   };
+
+  //   await this.prismaService.paciente.create({
+  //     data: createData,
+  //   });
+
+  //   return data;
+  // }
 
   async findAll(page: number, pageSize: number) {
     const skip = (page - 1) * pageSize;
@@ -84,11 +132,29 @@ export class PacienteService {
     };
   }
   async deletePaciente(id: string): Promise<void> {
-    await this.prismaService.paciente.delete({
-      where: {
-        id,
+    const now = new Date();
+    const existingPaciente = await this.prismaService.paciente.findUnique({
+      where: { id },
+    });
+
+    if (!existingPaciente) {
+      throw new NotFoundException('Paciente não encontrado');
+    }
+
+    await this.prismaService.paciente.update({
+      where: { id },
+      data: {
+        deletadoEm: now,
       },
     });
+
+    await this.prismaService.diagnostico.updateMany({
+      where: { pacienteId: id },
+      data: {
+        deletadoEm: now,
+      },
+    });
+
   }
 
   async updatePaciente(id: string, updateData: UpdatePacienteDTO) {
@@ -102,7 +168,7 @@ export class PacienteService {
       throw new NotFoundException('Paciente não encontrado');
     }
 
-    const updatedPaciente = await this.prismaService.paciente.update({
+    await this.prismaService.paciente.update({
       where: { id },
       data: {
         nome,
