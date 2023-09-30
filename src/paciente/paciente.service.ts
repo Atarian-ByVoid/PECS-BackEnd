@@ -55,51 +55,6 @@ export class PacienteService {
     };
   }
 
-  // async createPaciente(data: CreatePacienteDTO) {
-  //   const { dataNascimento, nome, documento, idUsuario, diagnostico } = data;
-
-  //   const user = await this.prismaService.usuario.findUnique({
-  //     where: { id: idUsuario },
-  //   });
-
-  //   if (!user) {
-  //     throw new NotFoundException('Usuário não encontrado');
-  //   }
-  //   const isoDate = new Date(dataNascimento).toISOString();
-
-  //   const createData = {
-  //     nome,
-  //     dataNascimento: isoDate,
-  //     documento,
-  //     Usuario: {
-  //       connect: { id: idUsuario },
-  //     },
-  //     diagnostico: {
-  //       create: diagnostico.map((dto) => {
-  //         const { dataDiagnostico, tratamento, subtipoTEA, gravidadeTEA } = dto;
-
-  //         if (!dataDiagnostico || !subtipoTEA || !gravidadeTEA) {
-  //           throw new BadRequestException('Dados de diagnóstico incompletos');
-  //         }
-  //         const isoDate = new Date(dataDiagnostico).toISOString();
-
-  //         return {
-  //           dataDiagnostico: isoDate,
-  //           tratamento,
-  //           subtipoTEA,
-  //           gravidadeTEA,
-  //         };
-  //       }),
-  //     },
-  //   };
-
-  //   await this.prismaService.paciente.create({
-  //     data: createData,
-  //   });
-
-  //   return data;
-  // }
-
   async findAll(page: number, pageSize: number) {
     const skip = (page - 1) * pageSize;
 

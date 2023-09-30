@@ -4,10 +4,6 @@ import { IsEnum, IsOptional, IsString } from "class-validator";
 
 export class DiagnosticoDTO {
 
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  idDiagnostico?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
