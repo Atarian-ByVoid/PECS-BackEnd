@@ -64,6 +64,8 @@ export class AuthService {
 
     if (user.role) {
       payload['role'] = user.role;
+      payload['id'] = user.id;
+
     }
 
     return this.jwtService.sign(

@@ -27,8 +27,5 @@ export class DiagnosticoDTO {
 
 export class CreateDiagnosticoDTO extends DiagnosticoDTO {
 
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  idDiagnostico?: string;
+
 }
