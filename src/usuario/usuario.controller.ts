@@ -1,16 +1,26 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { UsuarioService } from './usuario.service';
-import { CreateUsuarioDTO, UpdateUsuarioDTO, UsuarioDTO } from './usuario.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { UpdateUsuarioDTO } from './usuario.dto';
+import { UsuarioService } from './usuario.service';
 
 @Controller('usuario')
 @ApiTags('Usuario')
 @ApiSecurity('bearer')
 @UseGuards(JwtAuthGuard)
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) { }
+  constructor(private readonly usuarioService: UsuarioService) {}
 
   @Get()
   async findAll(
@@ -22,12 +32,26 @@ export class UsuarioController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.usuarioService.findOne(id);
+    try {
+      const user = await this.usuarioService.findOne(id);
+      if (!user) {
+        throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
+      }
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException('Erro ao buscar o usuário');
+    }
   }
 
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
-    return await this.usuarioService.deleteUser(id);
+    try {
+      await this.usuarioService.deleteUser(id);
+
+      return { message: `Usuário com ID ${id} foi excluído com sucesso` };
+    } catch (error) {
+      throw new InternalServerErrorException('Erro ao excluir o usuário');
+    }
   }
 
   @Put(':id')
@@ -36,13 +60,16 @@ export class UsuarioController {
     @Body() updateUsuarioDTO: UpdateUsuarioDTO,
   ) {
     try {
-      const updatedUser = await this.usuarioService.updateUser(id, updateUsuarioDTO);
+      const updatedUser = await this.usuarioService.updateUser(
+        id,
+        updateUsuarioDTO,
+      );
       if (!updatedUser) {
-        throw new NotFoundException(`Usuario com ID ${id} não encontrado`);
+        throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
       }
       return updatedUser;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException('Erro ao atualizar o usuário');
     }
   }
 }

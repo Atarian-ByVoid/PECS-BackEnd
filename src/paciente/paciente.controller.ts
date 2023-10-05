@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 
 import { ApiTags } from '@nestjs/swagger';
 import { CreatePacienteDTO, UpdatePacienteDTO } from './dto/paciente.dto';
@@ -7,7 +16,7 @@ import { PacienteService } from './paciente.service';
 @Controller('paciente')
 @ApiTags('Paciente')
 export class PacienteController {
-  constructor(private readonly pacienteService: PacienteService) { }
+  constructor(private readonly pacienteService: PacienteService) {}
 
   @Post()
   async create(@Body() data: CreatePacienteDTO) {
@@ -15,10 +24,12 @@ export class PacienteController {
   }
 
   @Put(':id')
-  async updatePaciente(@Param('id') id: string, @Body() updateData: UpdatePacienteDTO) {
+  async updatePaciente(
+    @Param('id') id: string,
+    @Body() updateData: UpdatePacienteDTO,
+  ) {
     return this.pacienteService.updatePaciente(id, updateData);
   }
-
 
   @Get()
   async findAll(
@@ -45,6 +56,4 @@ export class PacienteController {
   async deleteOrder(@Param('id') id: string) {
     return await this.pacienteService.deletePaciente(id);
   }
-
-
 }

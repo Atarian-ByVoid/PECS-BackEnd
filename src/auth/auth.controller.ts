@@ -1,22 +1,30 @@
-import { Body, Controller, Post, Put, Param, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateUsuarioDTO } from 'src/usuario/usuario.dto';
-import { UsuarioService } from 'src/usuario/usuario.service';
-import { AuthService } from './auth.service';
-import { ApiConsumes, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Usuario } from '@prisma/client';
 import { AuthUserDTO, UpdateRoleDTO } from './auth.dto';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post()
   async create(@Body() createUsuarioDTO: CreateUsuarioDTO) {
-    return await this.authService.create(createUsuarioDTO);
+    try {
+      return await this.authService.create(createUsuarioDTO);
+    } catch (error) {
+      throw new UnauthorizedException('Erro ao cadastrar o usuário');
+    }
   }
-
 
   @Post('login')
   async login(@Body() authUserDTO: AuthUserDTO) {
@@ -29,8 +37,14 @@ export class AuthController {
   }
 
   @Put(':id/update-role')
-  async updateUserRole(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDTO) {
-    const updatedUser = await this.authService.updateUserRole(id, updateRoleDto.role);
+  async updateUserRole(
+    @Param('id') id: string,
+    @Body() updateRoleDto: UpdateRoleDTO,
+  ) {
+    const updatedUser = await this.authService.updateUserRole(
+      id,
+      updateRoleDto.role,
+    );
 
     if (!updatedUser) {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado.`);
@@ -38,5 +52,4 @@ export class AuthController {
 
     return updatedUser;
   }
-
 }

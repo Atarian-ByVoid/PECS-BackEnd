@@ -15,7 +15,7 @@ export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
   async create(createUsuarioDTO: CreateUsuarioDTO) {
     const { senha, dataNascimento, ...rest } = createUsuarioDTO;
 
@@ -65,7 +65,6 @@ export class AuthService {
     if (user.role) {
       payload['role'] = user.role;
       payload['id'] = user.id;
-
     }
 
     return this.jwtService.sign(
@@ -101,7 +100,6 @@ export class AuthService {
 
       return updatedUser;
     } catch (error) {
-      console.error('Erro ao atualizar o papel do usuário:', error);
       throw new NotFoundException('Erro ao atualizar o papel do usuário.');
     }
   }
