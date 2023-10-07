@@ -1,15 +1,13 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, Usuario } from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUsuarioDTO, UpdateUsuarioDTO, UsuarioDTO } from './usuario.dto';
+import { UpdateUsuarioDTO } from './usuario.dto';
 
 @Injectable()
 export class UsuarioService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async findAll(page: number, pageSize: number) {
     const skip = (page - 1) * pageSize;
-
 
     const [data, total] = await Promise.all([
       this.prisma.usuario.findMany({
@@ -18,6 +16,10 @@ export class UsuarioService {
       }),
       this.prisma.usuario.count(),
     ]);
+
+    if (!data || total) {
+      throw new NotFoundException(`Nenhum usuario encontado`);
+    }
 
     return {
       statusCode: 200,
@@ -34,6 +36,9 @@ export class UsuarioService {
         id,
       },
     });
+    if (!dataUsuario) {
+      throw new NotFoundException(`Usuario com ID ${id} não encontrado`);
+    }
     return {
       statusCode: 200,
       data: dataUsuario,
@@ -58,7 +63,7 @@ export class UsuarioService {
   ): Promise<UpdateUsuarioDTO> {
     const user = await this.prisma.usuario.findUnique({ where: { id } });
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`Usuario com ID ${id} não encontrado`);
     }
 
     const updatedUserData: { [key: string]: any } = {};

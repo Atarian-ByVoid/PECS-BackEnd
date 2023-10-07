@@ -1,12 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePacienteDTO, UpdatePacienteDTO } from './dto/paciente.dto';
 
-
 @Injectable()
 export class PacienteService {
-  constructor(private prismaService: PrismaService) { }
-
+  constructor(private prismaService: PrismaService) {}
 
   async createPaciente(data: CreatePacienteDTO) {
     const { nome, documento, idUsuario, diagnostico } = data;
@@ -41,7 +43,6 @@ export class PacienteService {
         subtipoTEA,
         gravidadeTEA,
         pacienteId: paciente.id,
-
       };
     });
 
@@ -76,23 +77,26 @@ export class PacienteService {
   }
 
   async findOne(id: string) {
-    const dataTask = await this.prismaService.paciente.findFirst({
+    const paciente = await this.prismaService.paciente.findFirst({
       where: {
         id,
       },
     });
+    if (!paciente) {
+      throw new NotFoundException('Paciente não encontrado');
+    }
     return {
       statusCode: 200,
-      data: dataTask,
+      data: paciente,
     };
   }
   async deletePaciente(id: string): Promise<void> {
     const now = new Date();
-    const existingPaciente = await this.prismaService.paciente.findUnique({
+    const paciente = await this.prismaService.paciente.findUnique({
       where: { id },
     });
 
-    if (!existingPaciente) {
+    if (!paciente) {
       throw new NotFoundException('Paciente não encontrado');
     }
 
@@ -109,17 +113,16 @@ export class PacienteService {
         deletadoEm: now,
       },
     });
-
   }
 
   async updatePaciente(id: string, updateData: UpdatePacienteDTO) {
     const { nome, documento, diagnostico } = updateData;
 
-    const existingPaciente = await this.prismaService.paciente.findUnique({
+    const paciente = await this.prismaService.paciente.findUnique({
       where: { id },
     });
 
-    if (!existingPaciente) {
+    if (!paciente) {
       throw new NotFoundException('Paciente não encontrado');
     }
 
@@ -155,7 +158,4 @@ export class PacienteService {
 
     return updateData;
   }
-
-
-
 }
