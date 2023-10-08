@@ -7,14 +7,18 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
-import { ApiTags } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { CreatePacienteDTO, UpdatePacienteDTO } from './dto/paciente.dto';
 import { PacienteService } from './paciente.service';
 
 @Controller('paciente')
 @ApiTags('Paciente')
+@ApiSecurity('bearer')
+@UseGuards(JwtAuthGuard)
 export class PacienteController {
   constructor(private readonly pacienteService: PacienteService) {}
 
