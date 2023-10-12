@@ -1,31 +1,26 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { GravidadeTEA, SubtipoTEA } from "@prisma/client";
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { GravidadeTEA, SubtipoTEA } from '@prisma/client';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class DiagnosticoDTO {
-
-
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional({ required: false })
   @IsOptional()
   dataDiagnostico?: Date;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional({ required: false })
   @IsString()
   @IsOptional()
   tratamento?: string | null;
 
   @ApiProperty({ enum: SubtipoTEA })
   @IsEnum(SubtipoTEA)
+  @IsNotEmpty()
   subtipoTEA: SubtipoTEA;
 
   @ApiProperty({ enum: GravidadeTEA })
   @IsEnum(GravidadeTEA)
+  @IsNotEmpty()
   gravidadeTEA: GravidadeTEA;
-
-
 }
 
-export class CreateDiagnosticoDTO extends DiagnosticoDTO {
-
-
-}
+export class CreateDiagnosticoDTO extends DiagnosticoDTO {}

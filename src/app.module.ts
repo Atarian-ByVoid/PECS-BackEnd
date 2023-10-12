@@ -7,12 +7,14 @@ import { PacienteModule } from './paciente/paciente.module';
 import { PrismaService } from './prisma/prisma.service';
 import { UsuarioController } from './usuario/usuario.controller';
 import { UsuarioService } from './usuario/usuario.service';
+import { RelatorioModule } from './relatorio/relatorio.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
     AuthModule,
     PacienteModule,
+    RelatorioModule,
   ],
   controllers: [AuthController, UsuarioController],
   providers: [AuthService, PrismaService, UsuarioService],

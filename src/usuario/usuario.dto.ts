@@ -5,9 +5,10 @@ import {
   IsEnum,
   IsNotEmpty,
   IsString,
-  IsStrongPassword
+  IsStrongPassword,
 } from 'class-validator';
 import { PacienteDTO } from 'src/paciente/dto/paciente.dto';
+import { RelatorioDTO } from 'src/relatorio/dto/relatorio.dto';
 
 export class UsuarioDTO {
   @ApiProperty()
@@ -68,7 +69,7 @@ export class UsuarioDTO {
 
   @ApiProperty({ enum: Gender })
   @IsEnum(Gender)
-  gender: Gender
+  gender: Gender;
 
   @ApiPropertyOptional({ enum: Role })
   @IsEnum(Role)
@@ -76,10 +77,29 @@ export class UsuarioDTO {
 
   @ApiPropertyOptional({ type: [PacienteDTO] })
   paciente: PacienteDTO[];
+
+  @ApiPropertyOptional({ type: [RelatorioDTO] })
+  relatorio: RelatorioDTO[];
 }
 
-export class CreateUsuarioDTO extends OmitType(UsuarioDTO, ['role', 'id', 'imageUrl', 'paciente']) { }
-export class UpdateUsuarioDTO extends OmitType(UsuarioDTO, ['role', 'senha', 'cpf', 'rg', 'email', 'dataNascimento', 'id', 'imageUrl', 'paciente']) { }
+export class CreateUsuarioDTO extends OmitType(UsuarioDTO, [
+  'role',
+  'id',
+  'imageUrl',
+  'paciente',
+  'relatorio',
+]) {}
+export class UpdateUsuarioDTO extends OmitType(UsuarioDTO, [
+  'role',
+  'senha',
+  'cpf',
+  'rg',
+  'email',
+  'dataNascimento',
+  'id',
+  'imageUrl',
+  'paciente',
+  'relatorio',
+]) {}
 
-
-export class FindAllUsuariosDTO extends UsuarioDTO { }
+export class FindAllUsuariosDTO extends UsuarioDTO {}
