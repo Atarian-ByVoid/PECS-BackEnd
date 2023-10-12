@@ -6,11 +6,13 @@ import {
   Post,
   Put,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CreateUsuarioDTO } from 'src/usuario/usuario.dto';
 import { AuthUserDTO, UpdateRoleDTO } from './auth.dto';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './guard/jwt.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -37,6 +39,8 @@ export class AuthController {
   }
 
   @Put(':id/update-role')
+  @ApiSecurity('bearer')
+  @UseGuards(JwtAuthGuard)
   async updateUserRole(
     @Param('id') id: string,
     @Body() updateRoleDto: UpdateRoleDTO,

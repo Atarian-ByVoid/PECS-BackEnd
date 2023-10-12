@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -24,15 +26,32 @@ export class PacienteController {
 
   @Post()
   async create(@Body() data: CreatePacienteDTO) {
-    return await this.pacienteService.createPaciente(data);
+    try {
+      await this.pacienteService.createPaciente(data);
+
+      return { message: `Paciente criado com sucesso` };
+    } catch (error) {
+      throw new InternalServerErrorException('Erro ao criar o paciente');
+    }
   }
 
   @Put(':id')
   async updatePaciente(
     @Param('id') id: string,
-    @Body() updateData: UpdatePacienteDTO,
+    @Body() udpatePacienteDTO: UpdatePacienteDTO,
   ) {
-    return this.pacienteService.updatePaciente(id, updateData);
+    try {
+      const updatedPaciente = await this.pacienteService.updatePaciente(
+        id,
+        udpatePacienteDTO,
+      );
+      if (!updatedPaciente) {
+        throw new NotFoundException(`Paciente com ID ${id} não encontrado`);
+      }
+      return updatedPaciente;
+    } catch (error) {
+      throw new InternalServerErrorException('Erro ao atualizar o paciente');
+    }
   }
 
   @Get()
@@ -50,14 +69,24 @@ export class PacienteController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
-      return await this.pacienteService.findOne(id);
+      const paciente = await this.pacienteService.findOne(id);
+      if (!paciente) {
+        throw new NotFoundException(`Paciente com ID ${id} não encontrado`);
+      }
+      return paciente;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException('Erro ao buscar o paciente');
     }
   }
 
   @Delete(':id')
-  async deleteOrder(@Param('id') id: string) {
-    return await this.pacienteService.deletePaciente(id);
+  async deletePaciente(@Param('id') id: string) {
+    try {
+      await this.pacienteService.deletePaciente(id);
+
+      return { message: `Paciente com ID ${id} foi excluído com sucesso` };
+    } catch (error) {
+      throw new InternalServerErrorException('Erro ao excluir o paciente');
+    }
   }
 }
