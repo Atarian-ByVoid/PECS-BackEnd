@@ -271,6 +271,12 @@ console.log(message);
 
 ### Criando um projeto do zero em NestJS [aqui](https://www.treinaweb.com.br/blog/criando-o-primeiro-crud-com-nestjs)
 
+# Seeds no projeto
+Para facilitar o desenvolvimento e testes manuais das funcionalidades do sistema, foi criado seeders com intuito de popular o banco de dados para manipularmos nossas entidades com maior facilidade.
+
+#### Comando para rodar a seed: 
+-     $ npx ts-node usuario.seeds.ts
+Cerifique-se que você esteja dentro da pasta seeds "src/seeds", só então abra o terminal dentro dela e execute o comando acima.
 # Integração com AWS
 
 <div style="text-align: center;">
