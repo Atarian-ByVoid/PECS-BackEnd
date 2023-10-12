@@ -67,8 +67,10 @@ export class PacienteService {
       this.prismaService.paciente.count(),
     ]);
 
+    if (!data || total === 0) {
+      throw new NotFoundException(`Nenhum paciente encontado`);
+    }
     return {
-      statusCode: 200,
       data,
       page,
       pageSize,
@@ -86,7 +88,6 @@ export class PacienteService {
       throw new NotFoundException('Paciente não encontrado');
     }
     return {
-      statusCode: 200,
       data: paciente,
     };
   }

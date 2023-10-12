@@ -17,12 +17,11 @@ export class UsuarioService {
       this.prisma.usuario.count(),
     ]);
 
-    if (!data || total) {
+    if (!data || total === 0) {
       throw new NotFoundException(`Nenhum usuario encontado`);
     }
 
     return {
-      statusCode: 200,
       data,
       page,
       pageSize,
