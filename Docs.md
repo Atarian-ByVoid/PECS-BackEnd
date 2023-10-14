@@ -271,7 +271,7 @@ console.log(message);
 
 ### Criando um projeto do zero em NestJS [aqui](https://www.treinaweb.com.br/blog/criando-o-primeiro-crud-com-nestjs)
 
-# Seeds no projeto
+# Seeds no projeto 🌱
 Para facilitar o desenvolvimento e testes manuais das funcionalidades do sistema, foi criado seeders com intuito de popular o banco de dados para manipularmos nossas entidades com maior facilidade.
 
 #### Comando para rodar a seed: 
@@ -379,7 +379,7 @@ O codigo acima ainda não está pronto, por tanto usamos o seguinte padrão de c
 
 | Nome               | Função            |
 | :----------------- | :---------------- |
-| **Carlos Alberto** | _BackEnd/Suporte_ |
+| **Carlos Alberto** | _BackEnd/Suporte/FrontEnd_ |
 | **Henrique**       | _Suporte_         |
 | **Miguel Vilela**  | _BackEnd_         |
 | **Alexandre**      | _Backend_         |
