@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
-import { Gender, Role } from '@prisma/client';
+import { Genero, Role } from '@prisma/client';
 import {
   IsEmail,
   IsEnum,
@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { PacienteDTO } from 'src/paciente/dto/paciente.dto';
 import { RelatorioDTO } from 'src/relatorio/dto/relatorio.dto';
+import { RotinaDTO } from 'src/rotina/dto/rotina.dto';
 
 export class UsuarioDTO {
   @ApiProperty()
@@ -67,9 +68,9 @@ export class UsuarioDTO {
   @IsString()
   imageUrl: string;
 
-  @ApiProperty({ enum: Gender })
-  @IsEnum(Gender)
-  gender: Gender;
+  @ApiProperty({ enum: Genero })
+  @IsEnum(Genero)
+  genero: Genero;
 
   @ApiPropertyOptional({ enum: Role })
   @IsEnum(Role)
@@ -80,6 +81,9 @@ export class UsuarioDTO {
 
   @ApiPropertyOptional({ type: [RelatorioDTO] })
   relatorio: RelatorioDTO[];
+
+  @ApiPropertyOptional({ type: [RotinaDTO] })
+  rotina: RotinaDTO[];
 }
 
 export class CreateUsuarioDTO extends OmitType(UsuarioDTO, [
@@ -88,6 +92,7 @@ export class CreateUsuarioDTO extends OmitType(UsuarioDTO, [
   'imageUrl',
   'paciente',
   'relatorio',
+  'rotina',
 ]) {}
 export class UpdateUsuarioDTO extends OmitType(UsuarioDTO, [
   'role',
@@ -100,6 +105,7 @@ export class UpdateUsuarioDTO extends OmitType(UsuarioDTO, [
   'imageUrl',
   'paciente',
   'relatorio',
+  'rotina',
 ]) {}
 
 export class FindAllUsuariosDTO extends UsuarioDTO {}

@@ -5,6 +5,7 @@ import {
   DiagnosticoDTO,
 } from 'src/diagnostico/dto/diagnostico.dto';
 import { RelatorioDTO } from 'src/relatorio/dto/relatorio.dto';
+import { RotinaDTO } from 'src/rotina/dto/rotina.dto';
 import { UsuarioDTO } from 'src/usuario/usuario.dto';
 
 export class PacienteDTO {
@@ -39,12 +40,16 @@ export class PacienteDTO {
 
   @ApiPropertyOptional({ type: [RelatorioDTO] })
   relatorio: RelatorioDTO[];
+
+  @ApiPropertyOptional({ type: [RotinaDTO] })
+  rotina: RotinaDTO[];
 }
 
 export class CreatePacienteDTO extends OmitType(PacienteDTO, [
   'usuarios',
   'relatorio',
   'diagnostico',
+  'rotina',
 ]) {
   @ApiProperty({ type: () => [CreateDiagnosticoDTO], required: false })
   @IsArray()

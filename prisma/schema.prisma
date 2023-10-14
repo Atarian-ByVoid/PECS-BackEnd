@@ -12,7 +12,7 @@ enum Role {
   ADMIN
 }
 
-enum Gender {
+enum Genero {
   FEMININO
   MASCULINO
 }
@@ -45,28 +45,30 @@ enum TipoRelatorio {
 }
 
 model Usuario {
-  id             String      @id @default(uuid())
-  criadoEm       DateTime    @default(now())
-  atualizadoEm   DateTime    @updatedAt
+  id             String    @id @default(uuid())
+  criadoEm       DateTime  @default(now())
+  atualizadoEm   DateTime  @updatedAt
   deletadoEm     DateTime?
-  email          String      @unique
+  email          String    @unique
   senha          String
   nome           String
   telefone       String
-  cpf            String      @unique
-  rg             String      @unique
-  dataNascimento DateTime?   @db.Date
+  cpf            String    @unique
+  rg             String    @unique
+  dataNascimento DateTime? @db.Date
   logradouro     String
   cidade         String
   bairro         String
   uf             String
-  username       String      @unique
+  username       String    @unique
   imagemUrl      String?
-  gender         Gender      @default(FEMININO)
-  role           Role        @default(USER)
-  Paciente       Paciente?   @relation(fields: [pacienteId], references: [id])
-  pacienteId     String?
-  Relatorio      Relatorio[]
+  genero         Genero    @default(FEMININO)
+  role           Role      @default(USER)
+
+  pacienteId String?
+  Paciente   Paciente?   @relation(fields: [pacienteId], references: [id])
+  Relatorio  Relatorio[]
+  Rotina     Rotina[]
 
   @@map("usuario")
 }
@@ -83,6 +85,7 @@ model Paciente {
 
   Usuario   Usuario[]
   Relatorio Relatorio[]
+  Rotina    Rotina[]
 
   @@map("paciente")
 }
@@ -112,37 +115,43 @@ model Relatorio {
   descricao        String
   acoesNecessarias String?
   outrasAnotacoes  String?
-  pacienteId       String
-  usuarioId        String
-  Paciente         Paciente      @relation(fields: [pacienteId], references: [id])
-  Usuario          Usuario       @relation(fields: [usuarioId], references: [id])
+
+  pacienteId String
+  usuarioId  String
+  Paciente   Paciente @relation(fields: [pacienteId], references: [id])
+  Usuario    Usuario  @relation(fields: [usuarioId], references: [id])
 
   @@map("relatorio")
 }
 
-// model Rotina {
-//   id           String       @id @default(uuid())
-//   criadoEm     DateTime     @default(now())
-//   atualizadoEm DateTime     @updatedAt
-//   nome         String
-//   descricao    String?
-//   pacienteId   String
-//   usuarioId    String
-//   usuario      Usuario      @relation(fields: [usuarioId], references: [id])
-//   paciente     Paciente     @relation(fields: [pacienteId], references: [id])
-//   itens        ItemRotina[]
+model Rotina {
+  id           String    @id @default(uuid())
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+  deletadoEm   DateTime?
+  nome         String
+  descricao    String?
 
-//   @@map("rotina")
-// }
+  pacienteId String
+  usuarioId  String
+  usuario    Usuario      @relation(fields: [usuarioId], references: [id])
+  paciente   Paciente     @relation(fields: [pacienteId], references: [id])
+  itens      ItemRotina[]
 
-// model ItemRotina {
-//   id           String   @id @default(uuid())
-//   criadoEm     DateTime @default(now())
-//   atualizadoEm DateTime @updatedAt
-//   rotina       Rotina   @relation(fields: [rotinaId], references: [id])
-//   rotinaId     String
-//   hora         DateTime
-//   descricao    String
+  @@map("rotina")
+}
 
-//   @@map("item_rotina")
-// }
+model ItemRotina {
+  id           String    @id @default(uuid())
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+  deletadoEm   DateTime?
+
+  hora      DateTime
+  descricao String
+
+  rotinaId String
+  rotina   Rotina @relation(fields: [rotinaId], references: [id])
+
+  @@map("item_rotina")
+}

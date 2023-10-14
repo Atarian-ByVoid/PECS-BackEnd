@@ -11,7 +11,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('PECS')
     .setDescription('API PECS')
-    .setVersion('2.0 - Legacy')
+    .setVersion('2.0 - Alpha')
     .addBearerAuth()
     .build();
 

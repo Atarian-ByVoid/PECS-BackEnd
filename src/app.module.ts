@@ -8,6 +8,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { UsuarioController } from './usuario/usuario.controller';
 import { UsuarioService } from './usuario/usuario.service';
 import { RelatorioModule } from './relatorio/relatorio.module';
+import { RotinaModule } from './rotina/rotina.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { RelatorioModule } from './relatorio/relatorio.module';
     AuthModule,
     PacienteModule,
     RelatorioModule,
+    RotinaModule,
   ],
   controllers: [AuthController, UsuarioController],
   providers: [AuthService, PrismaService, UsuarioService],
