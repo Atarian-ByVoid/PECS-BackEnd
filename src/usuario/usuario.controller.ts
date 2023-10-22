@@ -8,17 +8,15 @@ import {
   Param,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
-import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { ApiTags } from '@nestjs/swagger';
 import { UpdateUsuarioDTO } from './usuario.dto';
 import { UsuarioService } from './usuario.service';
 
 @Controller('usuario')
 @ApiTags('Usuario')
-@ApiSecurity('bearer')
-@UseGuards(JwtAuthGuard)
+// @ApiSecurity('bearer')
+// @UseGuards(JwtAuthGuard)
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 

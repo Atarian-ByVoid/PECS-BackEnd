@@ -38,10 +38,7 @@ export class UsuarioService {
     if (!dataUsuario) {
       throw new NotFoundException(`Usuario com ID ${id} não encontrado`);
     }
-    return {
-      statusCode: 200,
-      data: dataUsuario,
-    };
+    return dataUsuario;
   }
 
   async deleteUser(id: string): Promise<void> {
