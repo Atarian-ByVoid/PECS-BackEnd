@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
-import { Genero, Role } from '@prisma/client';
+import { Role } from '@prisma/client';
 import {
   IsEmail,
   IsEnum,
@@ -33,44 +33,44 @@ export class UsuarioDTO {
   @IsString()
   telefone: string;
 
-  @ApiProperty()
-  @IsString()
-  cpf: string;
+  // @ApiProperty()
+  // @IsString()
+  // cpf: string;
 
-  @ApiProperty()
-  @IsString()
-  rg: string;
+  // @ApiProperty()
+  // @IsString()
+  // rg: string;
 
   @ApiProperty()
   dataNascimento: Date;
 
-  @ApiProperty()
-  @IsString()
-  logradouro: string;
+  // @ApiProperty()
+  // @IsString()
+  // logradouro: string;
 
-  @ApiProperty()
-  @IsString()
-  uf: string;
+  // @ApiProperty()
+  // @IsString()
+  // uf: string;
 
-  @ApiProperty()
-  @IsString()
-  bairro: string;
+  // @ApiProperty()
+  // @IsString()
+  // bairro: string;
 
-  @ApiProperty()
-  @IsString()
-  cidade: string;
+  // @ApiProperty()
+  // @IsString()
+  // cidade: string;
 
   @ApiProperty()
   @IsString()
   username: string;
 
-  @ApiProperty()
-  @IsString()
-  imageUrl: string;
+  // @ApiProperty()
+  // @IsString()
+  // imageUrl: string;
 
-  @ApiProperty({ enum: Genero })
-  @IsEnum(Genero)
-  genero: Genero;
+  // @ApiProperty({ enum: Genero })
+  // @IsEnum(Genero)
+  // genero: Genero;
 
   @ApiPropertyOptional({ enum: Role })
   @IsEnum(Role)
@@ -89,7 +89,7 @@ export class UsuarioDTO {
 export class CreateUsuarioDTO extends OmitType(UsuarioDTO, [
   'role',
   'id',
-  'imageUrl',
+  // 'imageUrl',
   'paciente',
   'relatorio',
   'rotina',
@@ -97,12 +97,12 @@ export class CreateUsuarioDTO extends OmitType(UsuarioDTO, [
 export class UpdateUsuarioDTO extends OmitType(UsuarioDTO, [
   'role',
   'senha',
-  'cpf',
-  'rg',
+  // 'cpf',
+  // 'rg',
   'email',
   'dataNascimento',
   'id',
-  'imageUrl',
+  // 'imageUrl',
   'paciente',
   'relatorio',
   'rotina',

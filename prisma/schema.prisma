@@ -53,16 +53,16 @@ model Usuario {
   senha          String
   nome           String
   telefone       String
-  cpf            String    @unique
-  rg             String    @unique
+  // cpf            String    @unique
+  // rg             String    @unique
   dataNascimento DateTime? @db.Date
-  logradouro     String
-  cidade         String
-  bairro         String
-  uf             String
+  // logradouro     String
+  // cidade         String
+  // bairro         String
+  // uf             String
   username       String    @unique
-  imagemUrl      String?
-  genero         Genero    @default(FEMININO)
+  // imagemUrl      String?
+  // genero         Genero    @default(FEMININO)
   role           Role      @default(USER)
 
   pacienteId String?

@@ -26,7 +26,7 @@ export class AuthService {
     };
 
     try {
-      await this.checkUniqueFields(rest.email, rest.cpf, rest.rg);
+      await this.checkUniqueFields(rest.email /*rest.cpf, rest.rg*/);
 
       const usuario = await this.prismaService.usuario.create({
         data: createData,
@@ -106,12 +106,12 @@ export class AuthService {
 
   async checkUniqueFields(
     email: string,
-    cpf: string,
-    rg: string,
+    // cpf: string,
+    // rg: string,
   ): Promise<void> {
     const existingUser = await this.prismaService.usuario.findFirst({
       where: {
-        OR: [{ email }, { cpf }, { rg }],
+        OR: [{ email } /*{ cpf }, { rg }*/],
       },
     });
 

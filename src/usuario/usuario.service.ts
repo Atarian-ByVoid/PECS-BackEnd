@@ -70,15 +70,19 @@ export class UsuarioService {
       if (updateUsuarioDTO.telefone) {
         updatedUserData.telefone = updateUsuarioDTO.telefone;
       }
-      if (updateUsuarioDTO.cidade) {
-        updatedUserData.cidade = updateUsuarioDTO.cidade;
+      if (updateUsuarioDTO.username) {
+        updatedUserData.username = updateUsuarioDTO.username;
       }
-      if (updateUsuarioDTO.uf) {
-        updatedUserData.uf = updateUsuarioDTO.uf;
-      }
-      if (updateUsuarioDTO.logradouro) {
-        updatedUserData.logradouro = updateUsuarioDTO.logradouro;
-      }
+
+      // if (updateUsuarioDTO.cidade) {
+      //   updatedUserData.cidade = updateUsuarioDTO.cidade;
+      // }
+      // if (updateUsuarioDTO.uf) {
+      //   updatedUserData.uf = updateUsuarioDTO.uf;
+      // }
+      // if (updateUsuarioDTO.logradouro) {
+      //   updatedUserData.logradouro = updateUsuarioDTO.logradouro;
+      // }
       const updatedUser = await this.prisma.usuario.update({
         where: { id },
         data: updatedUserData,
