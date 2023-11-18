@@ -107,5 +107,3 @@ export class UpdateUsuarioDTO extends OmitType(UsuarioDTO, [
   'relatorio',
   'rotina',
 ]) {}
-
-export class FindAllUsuariosDTO extends UsuarioDTO {}
